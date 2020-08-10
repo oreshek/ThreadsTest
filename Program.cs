@@ -2,14 +2,23 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
+using static ThreadTest.MessageProcessingDemo;
 
 namespace ThreadTest
 {
     class Program
     {
+
         static void Main(string[] args)
         {
             MessageProcessingDemo demo = new MessageProcessingDemo();
+            EventHandlers handler = new EventHandlers();
+            MessageHandler messageHandler = new MessageHandler(handler.Handler_Time);
+
+            demo.OnProcess += handler.Handler_Count;
+            demo.OnProcess += handler.Handler_Time;
+
+     
 
             demo.GenerateMessage();
             var a = demo.ProcessOneMessage();
@@ -39,7 +48,9 @@ namespace ThreadTest
                         string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
             ts.Hours, ts.Minutes, ts.Seconds,
             ts.Milliseconds);
-                        Console.WriteLine("RunTime " + elapsedTime);
+                        //demo.onProcess?.Invoke("RunTime " + elapsedTime)
+                        messageHandler.Invoke("RunTime " + elapsedTime);
+                       // Console.WriteLine("RunTime " + elapsedTime);
                     }
                     //else
                     //{

@@ -6,8 +6,11 @@ using System.Threading.Tasks;
 
 namespace ThreadTest
 {
-    class MessageProcessingDemo
+    public class MessageProcessingDemo
     {
+        public delegate void MessageHandler(string message);
+        public event MessageHandler OnProcess;
+       // EventHandlers handler = new EventHandlers(); // обьект класса Handlers
 
         public ConcurrentQueue<string> messageQueue = new ConcurrentQueue<string>();
 
@@ -30,7 +33,9 @@ namespace ThreadTest
 
         public async Task<IEnumerable<string>> ProcessMultipleMessages(int numOfTasksToRun = 1)
         {
-            Console.WriteLine(messageQueue.Count);
+            // Console.WriteLine(messageQueue.Count);
+            
+            OnProcess?.Invoke(messageQueue.Count.ToString());
             List<Task<string>> listTask = new List<Task<string>>();
 
             for (int i = 0; i < numOfTasksToRun; i++)
